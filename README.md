@@ -237,6 +237,7 @@ When saved, the field outputs a structured object (or an array of objects if `ha
 | **`drawerItemsPerRow`**    | `number`                             | `20`        | Global fallback for number of icons per row in drawer mode. |
 | **`drawerIconSize`**       | `number`                             | `24`        | Global fallback for icon display size inside the drawer.    |
 | **`drawerRowHeight`**      | `number`                             | `80`        | Global fallback for virtualized row container height.       |
+| **`drawerOverscan`**       | `number`                             | `5`         | Extra drawer rows rendered outside the visible area.        |
 
 ### Field Options (`iconField`)
 
@@ -251,4 +252,5 @@ When saved, the field outputs a structured object (or an array of objects if `ha
 | **`drawerItemsPerRow`** | `number`                 | `20`        | Number of icons per row in drawer mode. |
 | **`drawerIconSize`**    | `number`                 | `24`        | Icon rendering size inside the drawer.  |
 | **`drawerRowHeight`**   | `number`                 | `80`        | Virtualized row container height.       |
+| **`drawerOverscan`**    | `number`                 | `5`         | Extra rows rendered outside the visible drawer area. |
 | **`admin`**             | `FieldAdmin`             | `undefined` | Standard Payload admin field config.    |

@@ -28,6 +28,11 @@ export type CollectionConfigOptions = {
    */
   drawerItemsPerRow?: number
   /**
+   * Number of extra rows rendered outside the visible drawer area
+   * @default 5
+   */
+  drawerOverscan?: number
+  /**
    * Height of each row in drawer
    * @default 80
    */
@@ -77,6 +82,11 @@ export type PayloadIconPickerConfig = {
    */
   drawerItemsPerRow?: number
   /**
+   * Number of extra rows rendered outside the visible drawer area
+   * @default 5
+   */
+  drawerOverscan?: number
+  /**
    * Height of each row in drawer
    * @default 80
    */
@@ -113,6 +123,7 @@ export const iconField = (
     displayMode?: 'drawer' | 'select'
     drawerIconSize?: number
     drawerItemsPerRow?: number
+    drawerOverscan?: number
     drawerRowHeight?: number
     hasMany?: boolean
     label?: string
@@ -128,6 +139,7 @@ export const iconField = (
     displayMode = 'select',
     drawerIconSize,
     drawerItemsPerRow,
+    drawerOverscan = 5,
     drawerRowHeight,
     hasMany = false,
     label,
@@ -162,6 +174,7 @@ export const iconField = (
             displayMode,
             drawerIconSize,
             drawerItemsPerRow,
+            drawerOverscan,
             drawerRowHeight,
             hasMany,
             label: label ?? (hasMany ? 'Icons' : 'Icon'),
@@ -228,6 +241,11 @@ export const payloadIconPicker =
                 isObject && collectionOptions.drawerItemsPerRow !== undefined
                   ? collectionOptions.drawerItemsPerRow
                   : pluginOptions.drawerItemsPerRow,
+
+              drawerOverscan:
+                isObject && collectionOptions.drawerOverscan !== undefined
+                  ? collectionOptions.drawerOverscan
+                  : pluginOptions.drawerOverscan,
 
               drawerRowHeight:
                 isObject && collectionOptions.drawerRowHeight !== undefined

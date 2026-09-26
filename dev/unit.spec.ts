@@ -16,6 +16,7 @@ describe('iconField Standalone Function', () => {
     expect(adminField.path).toBe('payload-icon-picker/client#IconPicker')
     expect(adminField.clientProps.label).toBe('Icon')
     expect(adminField.clientProps.hasMany).toBe(false)
+    expect(adminField.clientProps.drawerOverscan).toBe(5)
   })
 
   test('should respect custom options (label, name, hasMany)', () => {
@@ -62,6 +63,12 @@ describe('iconField Standalone Function', () => {
 
     expect(field.admin?.position).toBe('sidebar')
   })
+
+  test('should pass drawer overscan from the standalone field', () => {
+    const field = iconField({ drawerOverscan: 8 })
+    const adminField = field.admin?.components?.Field as any
+    expect(adminField.clientProps.drawerOverscan).toBe(8)
+  })
 })
 
 describe('payloadIconPicker Plugin Config', () => {
@@ -85,9 +92,11 @@ describe('payloadIconPicker Plugin Config', () => {
         categories: true, // Должен упасть в глобальный фолбек
         posts: {
           name: 'postIcon',
+          drawerOverscan: 9,
           hasMany: true,
         },
       },
+      drawerOverscan: 7,
       hasMany: false,
     })
 
@@ -99,12 +108,14 @@ describe('payloadIconPicker Plugin Config', () => {
 
     expect(postsField.name).toBe('postIcon')
     expect(postsField.admin?.components?.Field?.clientProps?.hasMany).toBe(true)
+    expect(postsField.admin?.components?.Field?.clientProps?.drawerOverscan).toBe(9)
 
     const categoriesCollection = collections.find((c) => c.slug === 'categories')
     const categoriesField = categoriesCollection?.fields[0] as any
 
     expect(categoriesField.name).toBe('globalIcon')
     expect(categoriesField.admin?.components?.Field?.clientProps?.hasMany).toBe(false)
+    expect(categoriesField.admin?.components?.Field?.clientProps?.drawerOverscan).toBe(7)
   })
 
   test('should not add endpoints and providers if disabled is true', () => {

@@ -6,6 +6,8 @@ import { Drawer, DrawerToggler, useDrawerSlug, useModal } from '@payloadcms/ui'
 import Fuse from 'fuse.js'
 import React, { useCallback, useMemo, useState } from 'react'
 
+import type { IconComponent } from './IconTypes.js'
+
 import { IconGrid } from './IconGrid.js'
 import { SelectedBar } from './SelectedBar.js'
 
@@ -14,10 +16,11 @@ interface DrawerModeProps {
   disabled?: boolean
   drawerIconSize?: number
   drawerItemsPerRow?: number
+  drawerOverscan?: number
   drawerRowHeight?: number
   hasMany?: boolean
   iconNames: string[]
-  icons: Record<string, React.ComponentType<any>>
+  icons: Record<string, IconComponent>
   label: string
   onSelect: (name: string) => void
   path: string
@@ -29,6 +32,7 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
   disabled,
   drawerIconSize,
   drawerItemsPerRow,
+  drawerOverscan,
   drawerRowHeight,
   hasMany,
   iconNames,
@@ -178,6 +182,7 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
           <IconGrid
             drawerIconSize={drawerIconSize}
             drawerItemsPerRow={drawerItemsPerRow}
+            drawerOverscan={drawerOverscan}
             drawerRowHeight={drawerRowHeight}
             iconNames={filteredIconNames}
             icons={icons}

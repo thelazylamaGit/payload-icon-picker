@@ -4,12 +4,15 @@ import { Button } from '@payloadcms/ui'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import React, { useMemo, useRef } from 'react'
 
+import type { IconComponent } from './IconTypes.js'
+
 interface IconGridProps {
   drawerIconSize?: number
   drawerItemsPerRow?: number
+  drawerOverscan?: number
   drawerRowHeight?: number
   iconNames: string[]
-  icons: Record<string, React.ComponentType<any>>
+  icons: Record<string, IconComponent>
   onSelect: (name: string) => void
   selectedNames: string[]
 }
@@ -17,6 +20,7 @@ interface IconGridProps {
 export const IconGrid: React.FC<IconGridProps> = ({
   drawerIconSize = 24,
   drawerItemsPerRow = 20,
+  drawerOverscan = 5,
   drawerRowHeight = 80,
   iconNames,
   icons,
@@ -25,20 +29,16 @@ export const IconGrid: React.FC<IconGridProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const rows = useMemo(() => {
-    const result: string[][] = []
-    for (let i = 0; i < iconNames.length; i += drawerItemsPerRow) {
-      result.push(iconNames.slice(i, i + drawerItemsPerRow))
-    }
-    return result
-  }, [drawerItemsPerRow, iconNames])
+  const selectedNameSet = useMemo(() => new Set(selectedNames), [selectedNames])
 
   const rowVirtualizer = useVirtualizer({
-    count: rows.length,
+    count: Math.ceil(iconNames.length / drawerItemsPerRow),
     directDomUpdates: true,
     estimateSize: () => drawerRowHeight,
     getScrollElement: () => containerRef.current,
-    overscan: 5,
+    overscan: drawerOverscan,
+    // The row ref still registers elements for direct positioning; fixed sizes skip DOM reads.
+    useCachedMeasurements: true,
     useFlushSync: false,
   })
 
@@ -60,7 +60,8 @@ export const IconGrid: React.FC<IconGridProps> = ({
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const rowItems = rows[virtualRow.index]
+          const startIndex = virtualRow.index * drawerItemsPerRow
+          const rowItems = iconNames.slice(startIndex, startIndex + drawerItemsPerRow)
 
           return (
             <div
@@ -76,13 +77,12 @@ export const IconGrid: React.FC<IconGridProps> = ({
                 paddingBottom: '8px',
                 position: 'absolute',
                 top: 0,
-                transform: `translateY(${virtualRow.start}px)`,
                 width: '100%',
               }}
             >
               {rowItems.map((name) => {
                 const IconComponent = icons[name]
-                const isSelected = selectedNames.includes(name)
+                const isSelected = selectedNameSet.has(name)
 
                 return (
                   <Button

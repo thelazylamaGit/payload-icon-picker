@@ -6,6 +6,8 @@ import Fuse from 'fuse.js'
 import React, { useMemo, useRef } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
+import type { IconComponent } from './IconTypes.js'
+
 import { DrawerMode } from './DrawerMode.js'
 import { DropdownMode } from './DropdownMode.js'
 import { useIconPack } from './IconPackContext.js'
@@ -16,9 +18,10 @@ export const IconPicker: React.FC<{
   displayMode?: 'drawer' | 'select'
   drawerIconSize?: number
   drawerItemsPerRow?: number
+  drawerOverscan?: number
   drawerRowHeight?: number
   hasMany?: boolean
-  icons?: Record<string, React.ComponentType<any>>
+  icons?: Record<string, IconComponent>
   label: string
   path: string
 }> = ({
@@ -27,6 +30,7 @@ export const IconPicker: React.FC<{
   displayMode = 'select',
   drawerIconSize,
   drawerItemsPerRow,
+  drawerOverscan,
   drawerRowHeight,
   hasMany,
   icons: customIcons,
@@ -83,7 +87,15 @@ export const IconPicker: React.FC<{
     return []
   }, [value, hasMany])
 
+  const selectedNameSet = useMemo(
+    () => (displayMode === 'drawer' ? new Set(selectedNames) : null),
+    [displayMode, selectedNames],
+  )
+
   const options = useMemo(() => {
+    if (displayMode === 'drawer') {
+      return []
+    }
     return iconNames.map((name) => {
       const IconComponent = icons[name]
       return {
@@ -96,18 +108,21 @@ export const IconPicker: React.FC<{
         value: name,
       }
     })
-  }, [iconNames, icons])
+  }, [displayMode, iconNames, icons])
 
   const valueToRender = useMemo(() => {
+    if (displayMode === 'drawer') {
+      return null
+    }
     if (hasMany) {
       return selectedNames.map((name) => options.find((o) => o.value === name)).filter(Boolean)
     }
     const currentName = selectedNames[0]
     return currentName ? options.find((o) => o.value === currentName) || null : null
-  }, [hasMany, selectedNames, options])
+  }, [displayMode, hasMany, selectedNames, options])
 
   const handleSelectChange = (name: string) => {
-    const isAlreadySelected = selectedNames.includes(name)
+    const isAlreadySelected = selectedNameSet?.has(name) ?? false
 
     if (hasMany) {
       const currentArray = Array.isArray(value) ? value : []
@@ -151,12 +166,15 @@ export const IconPicker: React.FC<{
   }
 
   const optionsFuse = useMemo(() => {
+    if (displayMode === 'drawer') {
+      return null
+    }
     return new Fuse(options, {
       includeScore: true,
       keys: ['value'],
       threshold: 0.3,
     })
-  }, [options])
+  }, [displayMode, options])
 
   const filterCache = useRef<{ input: string; validValues: Set<string> }>({
     input: '',
@@ -170,7 +188,7 @@ export const IconPicker: React.FC<{
       }
 
       if (filterCache.current.input !== rawInput) {
-        const results = optionsFuse.search(rawInput)
+        const results = optionsFuse?.search(rawInput) ?? []
         filterCache.current = {
           input: rawInput,
           validValues: new Set(results.map((r) => r.item.value)),
@@ -195,6 +213,7 @@ export const IconPicker: React.FC<{
           closeOnSelect={closeOnSelect}
           drawerIconSize={drawerIconSize}
           drawerItemsPerRow={drawerItemsPerRow}
+          drawerOverscan={drawerOverscan}
           drawerRowHeight={drawerRowHeight}
           hasMany={hasMany}
           iconNames={iconNames}

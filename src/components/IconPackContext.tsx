@@ -4,9 +4,11 @@ import type { CollectionSlug } from 'payload'
 
 import React, { createContext, use } from 'react'
 
+import type { IconComponent } from './IconTypes.js'
+
 const IconPackContext = createContext<{
   collections?: Partial<Record<CollectionSlug, Record<string, any>>>
-  icons: Record<string, React.ComponentType<any>>
+  icons: Record<string, IconComponent>
 } | null>(null)
 
 export const IconPackProvider: React.FC<{

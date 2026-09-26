@@ -3,8 +3,10 @@
 import { Button } from '@payloadcms/ui'
 import React from 'react'
 
+import type { IconComponent } from './IconTypes.js'
+
 interface SelectedBarProps {
-  icons: Record<string, React.ComponentType<any>>
+  icons: Record<string, IconComponent>
   onRemove: (name: string) => void
   selectedNames: string[]
 }
