@@ -1,24 +1,22 @@
 'use client'
 
-import type { FuseResult } from 'fuse.js'
-
 import { Drawer, DrawerToggler, useDrawerSlug, useModal } from '@payloadcms/ui'
-import Fuse from 'fuse.js'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback } from 'react'
 
 import type { IconComponent } from './IconTypes.js'
 
-import { IconGrid } from './IconGrid.js'
-import { SelectedBar } from './SelectedBar.js'
+import { IconPickerPanel } from './IconPickerPanel.js'
 import './DrawerMode.scss'
 
 interface DrawerModeProps {
   closeOnSelect?: boolean
   disabled?: boolean
+  drawerClassName?: string
   drawerIconSize?: number
   drawerItemsPerRow?: number
   drawerOverscan?: number
   drawerRowHeight?: number
+  drawerSize?: 'compact' | 'full'
   hasMany?: boolean
   iconNames: string[]
   icons: Record<string, IconComponent>
@@ -31,10 +29,12 @@ interface DrawerModeProps {
 export const DrawerMode: React.FC<DrawerModeProps> = ({
   closeOnSelect,
   disabled,
+  drawerClassName,
   drawerIconSize,
   drawerItemsPerRow,
   drawerOverscan,
   drawerRowHeight,
+  drawerSize = 'full',
   hasMany,
   iconNames,
   icons,
@@ -43,37 +43,8 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
   path,
   selectedNames,
 }) => {
-  const [inputValue, setInputValue] = useState('')
   const drawerSlug = useDrawerSlug(`icon-picker-drawer-${path}`)
   const { closeModal } = useModal()
-
-  const focusSearchInput = useCallback((node: HTMLInputElement | null) => {
-    if (!node) {
-      return
-    }
-
-    node.focus()
-
-    let attempts = 0
-    let timer: ReturnType<typeof setTimeout> | undefined
-
-    const tick = () => {
-      if (document.activeElement === node || !node.isConnected || attempts >= 10) {
-        return
-      }
-      attempts += 1
-      node.focus()
-      timer = setTimeout(tick, 50)
-    }
-
-    timer = setTimeout(tick, 50)
-
-    return () => {
-      if (timer) {
-        clearTimeout(timer)
-      }
-    }
-  }, [])
 
   const handleSelect = useCallback(
     (name: string) => {
@@ -85,35 +56,12 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
     [onSelect, closeOnSelect, hasMany, closeModal, drawerSlug],
   )
 
-  const fuse = useMemo(() => {
-    return new Fuse(iconNames, {
-      includeScore: true,
-      threshold: 0.3,
-    })
-  }, [iconNames])
-
-  const filteredIconNames = useMemo(() => {
-    if (!inputValue) {
-      return iconNames
-    }
-    return fuse.search(inputValue).map((result: FuseResult<string>) => result.item)
-  }, [iconNames, inputValue, fuse])
-
   return (
     <div className="field-type__wrap" style={{ position: 'relative' }}>
       <DrawerToggler
-        className="btn btn--style-secondary"
+        className="btn btn--style-secondary icon-picker-drawer__trigger"
         disabled={disabled}
         slug={drawerSlug}
-        style={{
-          display: 'flex',
-          gap: '8px',
-          justifyContent: 'flex-start',
-          margin: '0',
-          padding: '10px',
-          textAlign: 'left',
-          width: '100%',
-        }}
       >
         {selectedNames.length > 0 ? (
           hasMany ? (
@@ -158,41 +106,27 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
         )}
       </DrawerToggler>
 
-      <Drawer className="icon-picker-drawer" slug={drawerSlug} title={label || 'Select Icon'}>
-        <div className="icon-picker-drawer__body">
-          <input
-            aria-label="Search icons"
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Search icons..."
-            ref={focusSearchInput}
-            style={{
-              background: 'var(--theme-input-bg)',
-              border: '1px solid var(--theme-elevation-200)',
-              borderRadius: '4px',
-              color: 'var(--theme-text)',
-              padding: '10px',
-              width: '100%',
-            }}
-            type="search"
-            value={inputValue}
-          />
-          <div style={{ fontSize: '12px', opacity: 0.6 }}>
-            Found {filteredIconNames.length} icons
-          </div>
-
-          <IconGrid
-            drawerIconSize={drawerIconSize}
-            drawerItemsPerRow={drawerItemsPerRow}
-            drawerOverscan={drawerOverscan}
-            drawerRowHeight={drawerRowHeight}
-            iconNames={filteredIconNames}
-            icons={icons}
-            onSelect={handleSelect}
-            selectedNames={selectedNames}
-          />
-
-          <SelectedBar icons={icons} onRemove={handleSelect} selectedNames={selectedNames} />
-        </div>
+      <Drawer
+        className={[
+          'icon-picker-drawer',
+          drawerSize === 'compact' && 'icon-picker-drawer--compact',
+          drawerClassName,
+        ]
+          .filter(Boolean)
+          .join(' ')}
+        slug={drawerSlug}
+        title={label || 'Select Icon'}
+      >
+        <IconPickerPanel
+          drawerIconSize={drawerIconSize}
+          drawerItemsPerRow={drawerItemsPerRow ?? (drawerSize === 'compact' ? 12 : undefined)}
+          drawerOverscan={drawerOverscan}
+          drawerRowHeight={drawerRowHeight}
+          iconNames={iconNames}
+          icons={icons}
+          onSelect={handleSelect}
+          selectedNames={selectedNames}
+        />
       </Drawer>
     </div>
   )

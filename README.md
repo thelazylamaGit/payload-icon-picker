@@ -146,6 +146,55 @@ export const MyBlock = {
 }
 ```
 
+### Drawer styling and custom shells
+
+Use `drawerSize: 'compact'` for an 800px maximum width and 12 icons per row, or keep the default `full` width and 20 icons per row. `drawerItemsPerRow` overrides either default. Add `drawerClassName` to style the Payload drawer from your admin stylesheet:
+
+```typescript
+iconField({
+  name: 'icon',
+  displayMode: 'drawer',
+  drawerSize: 'compact',
+  drawerClassName: 'my-icon-drawer',
+})
+```
+
+```scss
+.my-icon-drawer .drawer__content {
+  max-width: 640px;
+}
+
+.my-icon-drawer .icon-picker-panel__icon-button {
+  border-radius: 8px;
+}
+```
+
+The picker also exports `IconPickerPanel` from `payload-icon-picker/client`. It contains the search, virtualized grid, and selected icons, with no drawer dependency. A custom Payload field can put it inside Vaul or another dialog and manage its own trigger, open state, and selection callback. Install Vaul in the application if you use this example:
+
+```tsx
+import { IconPickerPanel } from 'payload-icon-picker/client'
+import { Drawer } from 'vaul'
+
+<Drawer.Root>
+  <Drawer.Trigger>Choose icon</Drawer.Trigger>
+  <Drawer.Portal>
+    <Drawer.Overlay className="my-icon-overlay" />
+    <Drawer.Content className="my-icon-content" data-icon-picker-overlay>
+      <Drawer.Title>Select icon</Drawer.Title>
+      <IconPickerPanel
+        drawerItemsPerRow={12}
+        iconNames={Object.keys(icons)}
+        icons={icons}
+        onSelect={handleSelect}
+        selectedNames={selectedNames}
+      />
+    </Drawer.Content>
+  </Drawer.Portal>
+</Drawer.Root>
+```
+
+Give the custom content a positioned flex layout with a bounded height (for example, `position: fixed; display: flex; flex-direction: column; height: min(80dvh, 700px)`). `data-icon-picker-overlay` lets the shared icon tooltip render above the scrolling grid. `IconPickerPanel` does not write the Payload field value; the custom field's `handleSelect` must do that.
+
 ### Standalone (Isolated) Use
 
 If you want to use a specific icon pack for a single field without registering a global provider, create a simple client-side wrapper:
@@ -238,6 +287,8 @@ When saved, the field outputs a structured object (or an array of objects if `ha
 | **`drawerIconSize`**       | `number`                             | `24`        | Global fallback for icon display size inside the drawer.    |
 | **`drawerRowHeight`**      | `number`                             | `80`        | Global fallback for virtualized row container height.       |
 | **`drawerOverscan`**       | `number`                             | `5`         | Extra drawer rows rendered outside the visible area.        |
+| **`drawerSize`**           | `'full'` \| `'compact'`             | `'full'`    | Built-in Payload drawer width preset.                       |
+| **`drawerClassName`**      | `string`                             | `undefined` | Extra class on the built-in Payload drawer.                  |
 
 ### Field Options (`iconField`)
 
@@ -253,4 +304,6 @@ When saved, the field outputs a structured object (or an array of objects if `ha
 | **`drawerIconSize`**    | `number`                 | `24`        | Icon rendering size inside the drawer.  |
 | **`drawerRowHeight`**   | `number`                 | `80`        | Virtualized row container height.       |
 | **`drawerOverscan`**    | `number`                 | `5`         | Extra rows rendered outside the visible drawer area. |
+| **`drawerSize`**        | `'full'` \| `'compact'`  | `'full'`    | Built-in Payload drawer width preset. |
+| **`drawerClassName`**   | `string`                 | `undefined` | Extra class on the built-in Payload drawer. |
 | **`admin`**             | `FieldAdmin`             | `undefined` | Standard Payload admin field config.    |

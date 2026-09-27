@@ -16,10 +16,12 @@ export const IconPicker: React.FC<{
   closeOnSelect?: boolean
   description?: string
   displayMode?: 'drawer' | 'select'
+  drawerClassName?: string
   drawerIconSize?: number
   drawerItemsPerRow?: number
   drawerOverscan?: number
   drawerRowHeight?: number
+  drawerSize?: 'compact' | 'full'
   hasMany?: boolean
   icons?: Record<string, IconComponent>
   label: string
@@ -28,10 +30,12 @@ export const IconPicker: React.FC<{
   closeOnSelect,
   description,
   displayMode = 'select',
+  drawerClassName,
   drawerIconSize,
   drawerItemsPerRow,
   drawerOverscan,
   drawerRowHeight,
+  drawerSize,
   hasMany,
   icons: customIcons,
   label,
@@ -211,10 +215,12 @@ export const IconPicker: React.FC<{
       {displayMode === 'drawer' ? (
         <DrawerMode
           closeOnSelect={closeOnSelect}
+          drawerClassName={drawerClassName}
           drawerIconSize={drawerIconSize}
           drawerItemsPerRow={drawerItemsPerRow}
           drawerOverscan={drawerOverscan}
           drawerRowHeight={drawerRowHeight}
+          drawerSize={drawerSize}
           hasMany={hasMany}
           iconNames={iconNames}
           icons={icons}

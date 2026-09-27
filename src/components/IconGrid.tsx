@@ -73,7 +73,9 @@ export const IconGrid: React.FC<IconGridProps> = ({
     hideTooltip()
     tooltipTimer.current = setTimeout(() => {
       const grid = containerRef.current
-      const drawerContent = grid?.closest('.drawer__content')
+      const drawerContent =
+        grid?.closest('[data-icon-picker-overlay], .drawer__content') ??
+        grid?.closest('.icon-picker-panel')
       if (!button.isConnected || !grid || !drawerContent) {
         return
       }
@@ -115,7 +117,7 @@ export const IconGrid: React.FC<IconGridProps> = ({
 
   return (
     <div
-      className="icon-picker-drawer__grid"
+      className="icon-picker-panel__grid"
       onPointerOut={handlePointerOut}
       onPointerOver={handlePointerOver}
       onScroll={hideTooltip}
@@ -139,6 +141,7 @@ export const IconGrid: React.FC<IconGridProps> = ({
 
           return (
             <div
+              className="icon-picker-panel__row"
               data-index={virtualRow.index}
               key={virtualRow.key}
               ref={rowVirtualizer.measureElement}
@@ -161,6 +164,7 @@ export const IconGrid: React.FC<IconGridProps> = ({
                 return (
                   <Button
                     buttonStyle={isSelected ? 'primary' : 'subtle'}
+                    className="icon-picker-panel__icon-button"
                     extraButtonProps={{ 'aria-label': name, 'data-icon-name': name }}
                     key={name}
                     margin={false}

@@ -18,6 +18,10 @@ export type CollectionConfigOptions = {
    */
   displayMode?: 'drawer' | 'select'
   /**
+   * Additional class on the Payload drawer for custom styling.
+   */
+  drawerClassName?: string
+  /**
    * Icon size in drawer
    * @default 24
    */
@@ -37,6 +41,11 @@ export type CollectionConfigOptions = {
    * @default 80
    */
   drawerRowHeight?: number
+  /**
+   * Maximum width preset for the Payload drawer.
+   * @default 'full'
+   */
+  drawerSize?: 'compact' | 'full'
   /**
    * Allow selecting multiple icons
    */
@@ -72,6 +81,10 @@ export type PayloadIconPickerConfig = {
    */
   displayMode?: 'drawer' | 'select'
   /**
+   * Additional class on the Payload drawer for custom styling.
+   */
+  drawerClassName?: string
+  /**
    * Icon size in drawer
    * @default 24
    */
@@ -91,6 +104,11 @@ export type PayloadIconPickerConfig = {
    * @default 80
    */
   drawerRowHeight?: number
+  /**
+   * Maximum width preset for the Payload drawer.
+   * @default 'full'
+   */
+  drawerSize?: 'compact' | 'full'
   /**
    * Allow selecting multiple icons (global fallback)
    */
@@ -121,10 +139,12 @@ export const iconField = (
     closeOnSelect?: boolean
     description?: string
     displayMode?: 'drawer' | 'select'
+    drawerClassName?: string
     drawerIconSize?: number
     drawerItemsPerRow?: number
     drawerOverscan?: number
     drawerRowHeight?: number
+    drawerSize?: 'compact' | 'full'
     hasMany?: boolean
     label?: string
     name?: string
@@ -137,10 +157,12 @@ export const iconField = (
     closeOnSelect = false,
     description,
     displayMode = 'select',
+    drawerClassName,
     drawerIconSize,
     drawerItemsPerRow,
     drawerOverscan = 5,
     drawerRowHeight,
+    drawerSize,
     hasMany = false,
     label,
     required = false,
@@ -172,10 +194,12 @@ export const iconField = (
             closeOnSelect,
             description,
             displayMode,
+            drawerClassName,
             drawerIconSize,
             drawerItemsPerRow,
             drawerOverscan,
             drawerRowHeight,
+            drawerSize,
             hasMany,
             label: label ?? (hasMany ? 'Icons' : 'Icon'),
           },
@@ -232,6 +256,10 @@ export const payloadIconPicker =
                 isObject && collectionOptions.displayMode !== undefined
                   ? collectionOptions.displayMode
                   : pluginOptions.displayMode,
+              drawerClassName:
+                isObject && collectionOptions.drawerClassName !== undefined
+                  ? collectionOptions.drawerClassName
+                  : pluginOptions.drawerClassName,
               drawerIconSize:
                 isObject && collectionOptions.drawerIconSize !== undefined
                   ? collectionOptions.drawerIconSize
@@ -251,6 +279,10 @@ export const payloadIconPicker =
                 isObject && collectionOptions.drawerRowHeight !== undefined
                   ? collectionOptions.drawerRowHeight
                   : pluginOptions.drawerRowHeight,
+              drawerSize:
+                isObject && collectionOptions.drawerSize !== undefined
+                  ? collectionOptions.drawerSize
+                  : pluginOptions.drawerSize,
 
               hasMany:
                 isObject && collectionOptions.hasMany !== undefined

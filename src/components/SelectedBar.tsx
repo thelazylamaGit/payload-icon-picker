@@ -17,29 +17,11 @@ export const SelectedBar: React.FC<SelectedBarProps> = ({ icons, onRemove, selec
   }
 
   return (
-    <div
-      className="icon-picker-drawer__selected"
-      style={{
-        background: 'var(--theme-elevation-50)',
-        border: '1px solid var(--theme-elevation-150)',
-        borderRadius: '6px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-        padding: '16px',
-      }}
-    >
-      <div
-        style={{
-          fontSize: '11px',
-          fontWeight: '600',
-          letterSpacing: '0.5px',
-          textTransform: 'uppercase',
-        }}
-      >
+    <div className="icon-picker-panel__selected">
+      <div className="icon-picker-panel__selected-label">
         Selected ({selectedNames.length}) — Click to remove:
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+      <div className="icon-picker-panel__selected-items">
         {selectedNames.map((name) => {
           const IconComponent = icons?.[name]
           return (

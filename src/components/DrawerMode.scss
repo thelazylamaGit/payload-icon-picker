@@ -4,23 +4,17 @@
     flex-direction: column;
   }
 
-  &__body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 16px;
-    min-height: 0;
-    padding: 16px;
+  &--compact .drawer__content {
+    max-width: min(800px, calc(100% - var(--gutter-h)));
   }
+}
 
-  &__grid {
-    flex: 1;
-    min-height: 120px;
-  }
-
-  &__selected {
-    flex-shrink: 0;
-    max-height: min(30dvh, 320px);
-    overflow-y: auto;
-  }
+.icon-picker-drawer__trigger {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 10px;
+  text-align: left;
+  width: 100%;
 }

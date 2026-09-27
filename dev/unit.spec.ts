@@ -69,6 +69,13 @@ describe('iconField Standalone Function', () => {
     const adminField = field.admin?.components?.Field as any
     expect(adminField.clientProps.drawerOverscan).toBe(8)
   })
+
+  test('should pass drawer styling options from the standalone field', () => {
+    const field = iconField({ drawerClassName: 'my-icon-drawer', drawerSize: 'compact' })
+    const adminField = field.admin?.components?.Field as any
+    expect(adminField.clientProps.drawerClassName).toBe('my-icon-drawer')
+    expect(adminField.clientProps.drawerSize).toBe('compact')
+  })
 })
 
 describe('payloadIconPicker Plugin Config', () => {
@@ -91,12 +98,16 @@ describe('payloadIconPicker Plugin Config', () => {
       collections: {
         categories: true, // Должен упасть в глобальный фолбек
         posts: {
+          drawerClassName: 'post-icons-drawer',
           name: 'postIcon',
           drawerOverscan: 9,
+          drawerSize: 'compact',
           hasMany: true,
         },
       },
+      drawerClassName: 'default-icons-drawer',
       drawerOverscan: 7,
+      drawerSize: 'full',
       hasMany: false,
     })
 
@@ -109,6 +120,10 @@ describe('payloadIconPicker Plugin Config', () => {
     expect(postsField.name).toBe('postIcon')
     expect(postsField.admin?.components?.Field?.clientProps?.hasMany).toBe(true)
     expect(postsField.admin?.components?.Field?.clientProps?.drawerOverscan).toBe(9)
+    expect(postsField.admin?.components?.Field?.clientProps?.drawerClassName).toBe(
+      'post-icons-drawer',
+    )
+    expect(postsField.admin?.components?.Field?.clientProps?.drawerSize).toBe('compact')
 
     const categoriesCollection = collections.find((c) => c.slug === 'categories')
     const categoriesField = categoriesCollection?.fields[0] as any
@@ -116,6 +131,10 @@ describe('payloadIconPicker Plugin Config', () => {
     expect(categoriesField.name).toBe('globalIcon')
     expect(categoriesField.admin?.components?.Field?.clientProps?.hasMany).toBe(false)
     expect(categoriesField.admin?.components?.Field?.clientProps?.drawerOverscan).toBe(7)
+    expect(categoriesField.admin?.components?.Field?.clientProps?.drawerClassName).toBe(
+      'default-icons-drawer',
+    )
+    expect(categoriesField.admin?.components?.Field?.clientProps?.drawerSize).toBe('full')
   })
 
   test('should not add endpoints and providers if disabled is true', () => {
