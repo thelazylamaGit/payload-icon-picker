@@ -18,6 +18,7 @@ export const SelectedBar: React.FC<SelectedBarProps> = ({ icons, onRemove, selec
 
   return (
     <div
+      className="icon-picker-drawer__selected"
       style={{
         background: 'var(--theme-elevation-50)',
         border: '1px solid var(--theme-elevation-150)',

@@ -1,0 +1,26 @@
+.icon-picker-drawer {
+  .drawer__content-children {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+    padding: 16px;
+  }
+
+  &__grid {
+    flex: 1;
+    min-height: 120px;
+  }
+
+  &__selected {
+    flex-shrink: 0;
+    max-height: min(30dvh, 320px);
+    overflow-y: auto;
+  }
+}

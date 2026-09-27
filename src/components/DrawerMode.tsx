@@ -10,6 +10,7 @@ import type { IconComponent } from './IconTypes.js'
 
 import { IconGrid } from './IconGrid.js'
 import { SelectedBar } from './SelectedBar.js'
+import './DrawerMode.scss'
 
 interface DrawerModeProps {
   closeOnSelect?: boolean
@@ -157,8 +158,8 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
         )}
       </DrawerToggler>
 
-      <Drawer slug={drawerSlug} title={label || 'Select Icon'}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px' }}>
+      <Drawer className="icon-picker-drawer" slug={drawerSlug} title={label || 'Select Icon'}>
+        <div className="icon-picker-drawer__body">
           <input
             aria-label="Search icons"
             onChange={(e) => setInputValue(e.target.value)}
