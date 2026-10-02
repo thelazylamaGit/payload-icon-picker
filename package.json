@@ -50,7 +50,7 @@
     "prepare": "pnpm build",
     "build:swc": "swc ./src -d ./dist --config-file .swcrc --strip-leading-paths",
     "build:types": "tsc --outDir dist --rootDir ./src",
-    "clean": "rimraf {dist,*.tsbuildinfo}",
+    "clean": "rimraf dist \"*.tsbuildinfo\"",
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
     "dev": "next dev dev --turbo",
     "dev:generate-importmap": "pnpm dev:payload generate:importmap",
