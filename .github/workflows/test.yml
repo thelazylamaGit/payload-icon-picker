@@ -11,13 +11,13 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - uses: pnpm/action-setup@v3
+            - uses: pnpm/action-setup@v6
               with:
-                  version: 9
+                  version: 12.7.0
 
             - uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 24
                   cache: "pnpm"
 
             - name: Install dependencies
@@ -31,3 +31,6 @@ jobs:
 
             - name: Run tests
               run: pnpm test:int run
+
+            - name: Verify package preparation
+              run: pnpm pack --pack-destination "$RUNNER_TEMP"

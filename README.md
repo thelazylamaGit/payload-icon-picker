@@ -35,6 +35,40 @@ yarn add payload-icon-picker
 bun add payload-icon-picker
 ```
 
+### Install this fork from GitHub with pnpm 12
+
+In your monorepo's root `pnpm-workspace.yaml`, merge this entry into your
+existing `allowBuilds` map before installing:
+
+```yaml
+allowBuilds:
+  'payload-icon-picker@git+https://github.com/thelazylamaGit/payload-icon-picker.git': true
+```
+
+pnpm 12 requires Git build permissions to identify the repository, rather than
+just the package name. See the [pnpm build settings](https://pnpm.io/settings/build#allowbuilds).
+
+After the packaging changes have been pushed to this fork, replace the local
+`file:` dependency in the Payload workspace package with a pinned Git commit:
+
+```bash
+pnpm --filter <payload-workspace-name> add "payload-icon-picker@github:thelazylamaGit/payload-icon-picker#<full-commit-sha>"
+```
+
+Replace both placeholders with your workspace package name and the full SHA of
+a commit containing these changes. Commit the resulting `package.json`,
+`pnpm-lock.yaml`, and workspace build permission together in your monorepo.
+
+The `prepare` hook builds JavaScript, declarations, and styles into `dist` before
+pnpm packages the Git dependency. No npm publication or committed build output
+is needed. The development app in this repository still uses its TypeScript
+source aliases.
+
+In GitHub Actions, set up Node.js 24 and pnpm 12.7.0 before running
+`pnpm install --frozen-lockfile` and your normal project build. Do not disable
+scripts: the Git dependency needs its `prepare` hook. If the fork is private,
+the runner also needs Git credentials with read access to it.
+
 ## Usage
 
 ### 1. Register the Plugin in `payload.config.ts`
