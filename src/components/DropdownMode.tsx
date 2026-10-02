@@ -29,6 +29,7 @@ const MenuList: React.FC<any> = (props) => {
     estimateSize: () => 38,
     getScrollElement: () => parentRef.current,
     overscan: 10,
+    useCachedMeasurements: true,
     useFlushSync: false,
   })
 
@@ -48,20 +49,20 @@ const MenuList: React.FC<any> = (props) => {
       <div
         ref={rowVirtualizer.containerRef}
         style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
           position: 'relative',
           width: '100%',
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => (
           <div
+            data-index={virtualRow.index}
             key={virtualRow.key}
+            ref={rowVirtualizer.measureElement}
             style={{
               height: `${virtualRow.size}px`,
               left: 0,
               position: 'absolute',
               top: 0,
-              transform: `translateY(${virtualRow.start}px)`,
               width: '100%',
             }}
           >

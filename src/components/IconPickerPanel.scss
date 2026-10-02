@@ -24,6 +24,8 @@
   &__grid {
     flex: 1;
     min-height: 120px;
+    overflow-anchor: none;
+    overscroll-behavior-y: contain;
   }
 
   &__selected {

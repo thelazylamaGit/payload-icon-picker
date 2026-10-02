@@ -112,7 +112,8 @@ export const IconGrid: React.FC<IconGridProps> = ({
     overscan: drawerOverscan,
     // The row ref still registers elements for direct positioning; fixed sizes skip DOM reads.
     useCachedMeasurements: true,
-    useFlushSync: false,
+    // Mount newly visible rows in the same scroll frame to avoid visual jumps on fast wheel input.
+    useFlushSync: true,
   })
 
   return (
